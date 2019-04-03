@@ -9,8 +9,10 @@ const multPort=process.env.MULT_PORT;
 const addhost=process.env.ADD_HOST;
 const addPort=process.env.ADD_PORT;
 
-const port=process.env.PORT;
-
+var port=0;
+if(process.env.PORT){
+    port=process.env.PORT;
+}
 app.use(morgan('short'));
 
 function callApi(targetHost, targetPort,targetPath,res) { 
