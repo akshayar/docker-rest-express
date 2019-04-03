@@ -1,12 +1,15 @@
 var express = require('express');
-var app = express();
 var morgan = require('morgan');
 var http = require('http');
-const multHost='localhost';
-const multPort=8082;
 
-const addhost='localhost';
-const addPort=8081;
+var app = express();
+const multHost=process.env.MULT_HOST;
+const multPort=process.env.MULT_PORT;
+
+const addhost=process.env.ADD_HOST;
+const addPort=process.env.ADD_PORT;
+
+const port=process.env.PORT;
 
 app.use(morgan('short'));
 
@@ -87,6 +90,6 @@ app.use((req, res) => {
     res.status(404).send('Page not found');
 });
 
-app.listen(8080, () => {
-    console.log('Akshaya you are in');
+app.listen(port, () => {
+    console.log('Akshaya you are in on port %s',port);
 });
