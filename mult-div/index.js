@@ -1,5 +1,6 @@
 var express = require('express');
 var morgan = require('morgan')
+var http =require('http')
 
 var app = express();
 app.use(morgan('short'))
@@ -39,6 +40,7 @@ app.use((req, res) => {
     res.status(404).send('Page not found');
 });
 
-app.listen(port, () => {
-    console.log('Akshaya you are in on port %s',app.address().port);
+var server=http.createServer(app);
+server.listen(port, () => {
+    console.log('Akshaya you are in on port %s',server.address().port);
 });
