@@ -4,7 +4,7 @@ var morgan = require('morgan')
 var app = express();
 app.use(morgan('short'))
 
-const port=proces.env.PORT;
+const port=process.env.PORT;
 
 var multApi = express.Router();
 
