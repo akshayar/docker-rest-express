@@ -1,8 +1,10 @@
 var express = require('express');
-var app = express();
 var morgan = require('morgan')
 
+var app = express();
 app.use(morgan('short'))
+
+const port=proces.env.PORT;
 
 var multApi = express.Router();
 
@@ -35,6 +37,6 @@ app.use((req, res) => {
     res.status(404).send('Page not found');
 });
 
-app.listen(8082, () => {
-    console.log('Akshaya you are in');
+app.listen(port, () => {
+    console.log('Akshaya you are in on port %s',port);
 });
