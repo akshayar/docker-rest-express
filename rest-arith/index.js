@@ -47,7 +47,7 @@ multApi.get('/:x/:y', (req, res) => {
     var y = parseFloat(req.params.y);
     console.log("In the multiplication api x=%s , y=%s",x,y);
   
-    callApi(multHost,multPort,'/api/mult/' + x + '/' + y,res);
+    callApi(multHost,multPort,'/api/multdiv/mult/' + x + '/' + y,res);
 });
 
 var divApi = express.Router();
@@ -57,7 +57,7 @@ divApi.get('/:x/:y', (req, res) => {
     var y = parseFloat(req.params.y);
     console.log("In the division api x=%s , y=%s",x,y);
   
-    callApi(multHost,multPort,'/api/div/' + x + '/' + y,res);
+    callApi(multHost,multPort,'/api/multdiv/div/' + x + '/' + y,res);
 });
 
 var addApi = express.Router();
@@ -67,7 +67,7 @@ addApi.get('/:x/:y', (req, res) => {
     var y = parseFloat(req.params.y);
     console.log("In the addition api x=%s , y=%s",x,y);
   
-    callApi(addhost,addPort,'/api/add/' + x + '/' + y,res);
+    callApi(addhost,addPort,'/api/addsub/add/' + x + '/' + y,res);
 });
 
 var subApi = express.Router();
@@ -77,16 +77,16 @@ subApi.get('/:x/:y', (req, res) => {
     var y = parseFloat(req.params.y);
     console.log("In the substract api x=%s , y=%s",x,y);
   
-    callApi(addhost,addPort,'/api/sub/' + x + '/' + y,res);
+    callApi(addhost,addPort,'/api/addsub/sub/' + x + '/' + y,res);
 });
 
 
 
 
-app.use('/api/mult', multApi);
-app.use('/api/div', divApi);
-app.use('/api/add', addApi);
-app.use('/api/sub', subApi);
+app.use('/api/calc/mult', multApi);
+app.use('/api/calc/div', divApi);
+app.use('/api/calc/add', addApi);
+app.use('/api/calc/sub', subApi);
 
 app.use((req, res) => {
     res.status(404).send('Page not found');

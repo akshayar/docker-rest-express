@@ -34,8 +34,8 @@ substractApi.get('/:x/:y', (req, res) => {
 });
 
 
-app.use('/api/add', addApi);
-app.use('/api/sub', substractApi);
+app.use('/api/addsub/add', addApi);
+app.use('/api/addsub/sub', substractApi);
 app.use((req, res) => {
     res.status(404).send('Page not found');
 });

@@ -34,8 +34,8 @@ divApi.get('/:x/:y', (req, res) => {
 });
 
 
-app.use('/api/mult', multApi);
-app.use('/api/div', divApi);
+app.use('/api/multdiv/mult', multApi);
+app.use('/api/multdiv/div', divApi);
 app.use((req, res) => {
     res.status(404).send('Page not found');
 });

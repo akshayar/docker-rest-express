@@ -1,0 +1,46 @@
+[
+	{
+		"ParameterKey": "StackName",
+		"ParameterValue": "calculator-ecs"
+	},
+	{
+		"ParameterKey": "ServiceName",
+		"ParameterValue": "calculator-add-sub"
+	},
+	{
+		"ParameterKey": "ImageUrl",
+		"ParameterValue": "arawa3/express-add-sub"
+	},
+	{
+		"ParameterKey": "ContainerPort",
+		"ParameterValue": "8000"
+	},
+	{
+		"ParameterKey": "ContainerCpu",
+		"ParameterValue": "256"
+	},
+	{
+		"ParameterKey": "ContainerMemory",
+		"ParameterValue": "512"
+	},
+	{
+		"ParameterKey": "Path",
+		"ParameterValue": "/api/add/*"
+	},
+	{
+		"ParameterKey": "HealthCheckPath",
+		"ParameterValue": "/api/add/1/1"
+	},
+	{
+		"ParameterKey": "HealthCheckGracePeriodSeconds",
+		"ParameterValue": "60"
+	},
+	{
+		"ParameterKey": "Priority",
+		"ParameterValue": "10"
+	},
+	{
+		"ParameterKey": "DesiredCount",
+		"ParameterValue": "1"
+	}
+]

@@ -1,0 +1,46 @@
+[
+	{
+		"ParameterKey": "StackName",
+		"ParameterValue": "calculator-ecs"
+	},
+	{
+		"ParameterKey": "ServiceName",
+		"ParameterValue": "calculator-mult-div"
+	},
+	{
+		"ParameterKey": "ImageUrl",
+		"ParameterValue": "arawa3/express-mult-div"
+	},
+	{
+		"ParameterKey": "ContainerPort",
+		"ParameterValue": "8000"
+	},
+	{
+		"ParameterKey": "ContainerCpu",
+		"ParameterValue": "256"
+	},
+	{
+		"ParameterKey": "ContainerMemory",
+		"ParameterValue": "512"
+	},
+	{
+		"ParameterKey": "Path",
+		"ParameterValue": "/api/mult/*"
+	},
+	{
+		"ParameterKey": "HealthCheckPath",
+		"ParameterValue": "/api/mult/1/1"
+	},
+	{
+		"ParameterKey": "HealthCheckGracePeriodSeconds",
+		"ParameterValue": "60"
+	},
+	{
+		"ParameterKey": "Priority",
+		"ParameterValue": "9"
+	},
+	{
+		"ParameterKey": "DesiredCount",
+		"ParameterValue": "1"
+	}
+]
