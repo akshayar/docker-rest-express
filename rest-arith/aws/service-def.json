@@ -185,19 +185,19 @@
                                 },
                                 {
                                     "Name":"MULT_HOST",
-                                    "Value":"elb.calculator-local"
+                                    "Value":"calculator-mult-div.service.calculator"
                                 },
                                 {
                                     "Name":"MULT_PORT",
-                                    "Value":"80"
+                                    "Value":"8000"
                                 },
                                 {
                                     "Name":"ADD_HOST",
-                                    "Value":"elb.calculator-local"
+                                    "Value":"calculator-add-sub.service.calculator"
                                 },
                                 {
                                     "Name":"ADD_PORT",
-                                    "Value":"80"
+                                    "Value":"8000"
                                 }
 
                             ]
