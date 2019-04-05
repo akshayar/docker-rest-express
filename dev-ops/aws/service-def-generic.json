@@ -294,6 +294,9 @@
                                 "Fn::Sub": "${StackName}:PrivateServiceDiscoveryNamespace"
                             }
                         }
+                    },
+                    "HealthCheckCustomConfig": {
+                        "FailureThreshold": 1
                     }
                 }
             },
