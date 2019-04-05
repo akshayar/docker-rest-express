@@ -1,0 +1,489 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Deploy a service on AWS Fargate, hosted in a private subnet, behind a private load balancer.",
+    "Parameters": {
+        "EnvironmentName": {
+            "Type": "String",
+            "Default": "production",
+            "Description": "The name of the environment to add this service to"
+        },
+        "ServiceName": {
+            "Type": "String",
+            "Default": "nginx",
+            "Description": "A name for the service"
+        },
+        "ImageUrl": {
+            "Type": "String",
+            "Default": "nginx",
+            "Description": "The url of a docker image that contains the application process that will handle the traffic for this service"
+        },
+        "ContainerPort": {
+            "Type": "Number",
+            "Default": 80,
+            "Description": "What port number the application inside the docker container is binding to"
+        },
+        "ContainerCpu": {
+            "Type": "Number",
+            "Default": 256,
+            "Description": "How much CPU to give the container. 1024 is 1 CPU"
+        },
+        "ContainerMemory": {
+            "Type": "Number",
+            "Default": 512,
+            "Description": "How much memory in megabytes to give the container"
+        },
+        "DesiredCount": {
+            "Type": "Number",
+            "Default": 2,
+            "Description": "How many copies of the service task to run"
+        },
+        "Role": {
+            "Type": "String",
+            "Default": "",
+            "Description": "(Optional) An IAM role to give the service's containers if the code within needs to access other AWS resources like S3 buckets, DynamoDB tables, etc"
+        }
+    },
+    "Conditions": {
+        "HasCustomRole": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Ref": "Role"
+                        },
+                        ""
+                    ]
+                }
+            ]
+        }
+    },
+    "Resources": {
+        "LogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+                "LogGroupName": {
+                    "Fn::Sub": "${EnvironmentName}-service-${ServiceName}"
+                }
+            }
+        },
+        "TaskDefinition": {
+            "Type": "AWS::ECS::TaskDefinition",
+            "Properties": {
+                "Family": {
+                    "Ref": "ServiceName"
+                },
+                "Cpu": {
+                    "Ref": "ContainerCpu"
+                },
+                "Memory": {
+                    "Ref": "ContainerMemory"
+                },
+                "NetworkMode": "awsvpc",
+                "RequiresCompatibilities": [
+                    "FARGATE"
+                ],
+                "ExecutionRoleArn": {
+                    "Fn::ImportValue": {
+                        "Fn::Sub": "${EnvironmentName}:ECSTaskExecutionRole"
+                    }
+                },
+                "TaskRoleArn": {
+                    "Fn::If": [
+                        "HasCustomRole",
+                        {
+                            "Ref": "Role"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
+                "ContainerDefinitions": [
+                    {
+                        "Name": {
+                            "Ref": "ServiceName"
+                        },
+                        "Cpu": {
+                            "Ref": "ContainerCpu"
+                        },
+                        "Memory": {
+                            "Ref": "ContainerMemory"
+                        },
+                        "Image": {
+                            "Ref": "ImageUrl"
+                        },
+                        "PortMappings": [
+                            {
+                                "ContainerPort": {
+                                    "Ref": "ContainerPort"
+                                }
+                            }
+                        ],
+                        "LogConfiguration": {
+                            "LogDriver": "awslogs",
+                            "Options": {
+                                "awslogs-group": {
+                                    "Fn::Sub": "${EnvironmentName}-service-${ServiceName}"
+                                },
+                                "awslogs-region": {
+                                    "Ref": "AWS::Region"
+                                },
+                                "awslogs-stream-prefix": {
+                                    "Ref": "ServiceName"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "Service": {
+            "Type": "AWS::ECS::Service",
+            "Properties": {
+                "ServiceName": {
+                    "Ref": "ServiceName"
+                },
+                "Cluster": {
+                    "Fn::ImportValue": {
+                        "Fn::Sub": "${EnvironmentName}:ClusterName"
+                    }
+                },
+                "LaunchType": "FARGATE",
+                "DeploymentConfiguration": {
+                    "MaximumPercent": 200,
+                    "MinimumHealthyPercent": 75
+                },
+                "DesiredCount": {
+                    "Ref": "DesiredCount"
+                },
+                "NetworkConfiguration": {
+                    "AwsvpcConfiguration": {
+                        "SecurityGroups": [
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:ContainerSecurityGroup"
+                                }
+                            }
+                        ],
+                        "Subnets": [
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:PrivateSubnetOne"
+                                }
+                            },
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:PrivateSubnetTwo"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "TaskDefinition": {
+                    "Ref": "TaskDefinition"
+                },
+                "ServiceRegistries": [
+                    {
+                        "RegistryArn": {
+                            "Fn::GetAtt": [
+                                "ServiceDiscoveryService",
+                                "Arn"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "ServiceDiscoveryService": {
+            "Type": "AWS::ServiceDiscovery::Service",
+            "Properties": {
+                "Name": {
+                    "Ref": "ServiceName"
+                },
+                "DnsConfig": {
+                    "DnsRecords": [
+                        {
+                            "Type": "A",
+                            "TTL": "10"
+                        }
+                    ],
+                    "NamespaceId": {
+                        "Fn::ImportValue": {
+                            "Fn::Sub": "${EnvironmentName}:PrivateServiceDiscoveryNamespace"
+                        }
+                    }
+                },
+                "HealthCheckCustomConfig": {
+                    "FailureThreshold": 1
+                }
+            }
+        },
+        "ScalableTarget": {
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "DependsOn": "Service",
+            "Properties": {
+                "ServiceNamespace": "ecs",
+                "ScalableDimension": "ecs:service:DesiredCount",
+                "ResourceId": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "service",
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:ClusterName"
+                                }
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            }
+                        ]
+                    ]
+                },
+                "MinCapacity": 2,
+                "MaxCapacity": 10,
+                "RoleARN": {
+                    "Fn::ImportValue": {
+                        "Fn::Sub": "${EnvironmentName}:AutoscalingRole"
+                    }
+                }
+            }
+        },
+        "ScaleDownPolicy": {
+            "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+            "DependsOn": "ScalableTarget",
+            "Properties": {
+                "PolicyName": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "scale",
+                            {
+                                "Ref": "EnvironmentName"
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            },
+                            "down"
+                        ]
+                    ]
+                },
+                "PolicyType": "StepScaling",
+                "ResourceId": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "service",
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:ClusterName"
+                                }
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            }
+                        ]
+                    ]
+                },
+                "ScalableDimension": "ecs:service:DesiredCount",
+                "ServiceNamespace": "ecs",
+                "StepScalingPolicyConfiguration": {
+                    "AdjustmentType": "ChangeInCapacity",
+                    "StepAdjustments": [
+                        {
+                            "MetricIntervalUpperBound": 0,
+                            "ScalingAdjustment": -1
+                        }
+                    ],
+                    "MetricAggregationType": "Average",
+                    "Cooldown": 60
+                }
+            }
+        },
+        "ScaleUpPolicy": {
+            "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+            "DependsOn": "ScalableTarget",
+            "Properties": {
+                "PolicyName": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "scale",
+                            {
+                                "Ref": "EnvironmentName"
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            },
+                            "up"
+                        ]
+                    ]
+                },
+                "PolicyType": "StepScaling",
+                "ResourceId": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "service",
+                            {
+                                "Fn::ImportValue": {
+                                    "Fn::Sub": "${EnvironmentName}:ClusterName"
+                                }
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            }
+                        ]
+                    ]
+                },
+                "ScalableDimension": "ecs:service:DesiredCount",
+                "ServiceNamespace": "ecs",
+                "StepScalingPolicyConfiguration": {
+                    "AdjustmentType": "ChangeInCapacity",
+                    "StepAdjustments": [
+                        {
+                            "MetricIntervalLowerBound": 0,
+                            "MetricIntervalUpperBound": 15,
+                            "ScalingAdjustment": 1
+                        },
+                        {
+                            "MetricIntervalLowerBound": 15,
+                            "MetricIntervalUpperBound": 25,
+                            "ScalingAdjustment": 2
+                        },
+                        {
+                            "MetricIntervalLowerBound": 25,
+                            "ScalingAdjustment": 3
+                        }
+                    ],
+                    "MetricAggregationType": "Average",
+                    "Cooldown": 60
+                }
+            }
+        },
+        "LowCpuUsageAlarm": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "low-cpu",
+                            {
+                                "Ref": "EnvironmentName"
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            }
+                        ]
+                    ]
+                },
+                "AlarmDescription": {
+                    "Fn::Join": [
+                        " ",
+                        [
+                            "Low CPU utilization for service",
+                            {
+                                "Ref": "ServiceName"
+                            },
+                            "in environment",
+                            {
+                                "Ref": "EnvironmentName"
+                            }
+                        ]
+                    ]
+                },
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/ECS",
+                "Dimensions": [
+                    {
+                        "Name": "ServiceName",
+                        "Value": {
+                            "Ref": "ServiceName"
+                        }
+                    },
+                    {
+                        "Name": "ClusterName",
+                        "Value": {
+                            "Fn::ImportValue": {
+                                "Fn::Sub": "${EnvironmentName}:ClusterName"
+                            }
+                        }
+                    }
+                ],
+                "Statistic": "Average",
+                "Period": 60,
+                "EvaluationPeriods": 1,
+                "Threshold": 20,
+                "ComparisonOperator": "LessThanOrEqualToThreshold",
+                "AlarmActions": [
+                    {
+                        "Ref": "ScaleDownPolicy"
+                    }
+                ]
+            }
+        },
+        "HighCpuUsageAlarm": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "high-cpu",
+                            {
+                                "Ref": "EnvironmentName"
+                            },
+                            {
+                                "Ref": "ServiceName"
+                            }
+                        ]
+                    ]
+                },
+                "AlarmDescription": {
+                    "Fn::Join": [
+                        " ",
+                        [
+                            "High CPU utilization for service",
+                            {
+                                "Ref": "ServiceName"
+                            },
+                            "in environment",
+                            {
+                                "Ref": "EnvironmentName"
+                            }
+                        ]
+                    ]
+                },
+                "MetricName": "CPUUtilization",
+                "Namespace": "AWS/ECS",
+                "Dimensions": [
+                    {
+                        "Name": "ServiceName",
+                        "Value": {
+                            "Ref": "ServiceName"
+                        }
+                    },
+                    {
+                        "Name": "ClusterName",
+                        "Value": {
+                            "Fn::ImportValue": {
+                                "Fn::Sub": "${EnvironmentName}:ClusterName"
+                            }
+                        }
+                    }
+                ],
+                "Statistic": "Average",
+                "Period": 60,
+                "EvaluationPeriods": 1,
+                "Threshold": 70,
+                "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+                "AlarmActions": [
+                    {
+                        "Ref": "ScaleUpPolicy"
+                    }
+                ]
+            }
+        }
+    }
+}

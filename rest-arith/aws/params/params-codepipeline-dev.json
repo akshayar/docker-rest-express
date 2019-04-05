@@ -2,7 +2,7 @@
     "Parameters": {
         "StackName": "calculator-ecs",
         "ServiceName": "calculator-rest-rith",
-        "ImageUrl": "arawa3/express-rest-rith",
+        "ImageUrl": "025506738155.dkr.ecr.us-east-1.amazonaws.com/express-rest-rith",
         "ContainerPort": "8000",
         "ContainerCpu": "256",
         "ContainerMemory": "512",

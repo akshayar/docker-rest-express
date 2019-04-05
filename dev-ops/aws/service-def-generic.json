@@ -263,7 +263,38 @@
                                 "Ref": "TargetGroup"
                             }
                         }
+                    ],
+                    "ServiceRegistries": [
+                        {
+                            "RegistryArn": {
+                                "Fn::GetAtt": [
+                                    "ServiceDiscoveryService",
+                                    "Arn"
+                                ]
+                            }
+                        }
                     ]
+                }
+            },
+            "ServiceDiscoveryService": {
+                "Type": "AWS::ServiceDiscovery::Service",
+                "Properties": {
+                    "Name": {
+                        "Ref": "ServiceName"
+                    },
+                    "DnsConfig": {
+                        "DnsRecords": [
+                            {
+                                "Type": "A",
+                                "TTL": "10"
+                            }
+                        ],
+                        "NamespaceId": {
+                            "Fn::ImportValue": {
+                                "Fn::Sub": "${StackName}:PrivateServiceDiscoveryNamespace"
+                            }
+                        }
+                    }
                 }
             },
             "TargetGroup": {

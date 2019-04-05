@@ -1,0 +1,66 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "An internal service discovery namespace",
+    "Parameters": {
+        "Domain": {
+            "Type": "String",
+            "Default": "service.calculator",
+            "Description": "The name of the namespace. Services are prepended, for example user.service.production"
+        },
+        "ExportNameSpace": {
+            "Type": "String",
+            "Default": "calculator-ecs",
+            "Description": "Namespace to export output."
+        }
+    },
+    "Resources": {
+        "ServiceDiscoveryNamespace": {
+            "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+            "Properties": {
+                "Name": {
+                    "Ref": "Domain"
+                },
+                "Vpc": {
+                    "Fn::ImportValue": {
+                        "Fn::Join": [
+                            ":",
+                            [
+                                {
+                                    "Ref": "ExportNameSpace"
+                                },
+                                "VPCId"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "PrivateServiceDiscoveryNamespace": {
+            "Description": "The ID of the private service discovery namespace",
+            "Value": {
+                "Ref": "ServiceDiscoveryNamespace"
+            },
+            "Export": {
+                "Name": {
+                    "Fn::Sub": "${ExportNameSpace}:PrivateServiceDiscoveryNamespace"
+                }
+            }
+        },
+        "PrivateServiceDiscoveryNamespaceId": {
+            "Description": "The ID of the private service discovery namespace",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceDiscoveryNamespace",
+                    "Id"
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::Sub": "${ExportNameSpace}:PrivateServiceDiscoveryNamespaceId"
+                }
+            }
+        }
+    }
+}

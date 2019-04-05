@@ -1,0 +1,6 @@
+{
+    "Parameters": {
+        "Domain": "service.calculator",
+        "ExportNameSpace": "calculator-ecs"
+    }
+}
