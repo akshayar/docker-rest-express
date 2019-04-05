@@ -11,16 +11,16 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd add-sub && ./build-docker-image.sh  express-add-sub  ${ECR_URL} && cd ..
-      - cd add-sub && ./build-docker-image.sh  express-mult-div  ${ECR_URL} && cd ..
-      - cd add-sub && ./build-docker-image.sh  express-rest-rith  ${ECR_URL} && cd ..
+      - cd add-sub && ../dev-ops/build-docker-image.sh  express-add-sub  ${ECR_URL} && cd ..
+      - cd add-sub && ../dev-ops/build-docker-image.sh  express-mult-div  ${ECR_URL} && cd ..
+      - cd add-sub && ../dev-ops/build-docker-image.sh  express-rest-rith  ${ECR_URL} && cd ..
       - pwd
   post_build:
     commands:
       - echo pushing images now
-      - ./push-docker-image.sh express-add-sub  ${ECR_URL}
-      - ./push-docker-image.sh express-mult-div  ${ECR_URL}
-      - ./push-docker-image.sh express-rest-rith  ${ECR_URL}
+      - ../dev-ops/push-docker-image.sh express-add-sub  ${ECR_URL}
+      - ../dev-ops/push-docker-image.sh express-mult-div  ${ECR_URL}
+      - ../dev-ops/push-docker-image.sh express-rest-rith  ${ECR_URL}
 
 artifacts:
   files:
