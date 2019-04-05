@@ -19,9 +19,9 @@ phases:
   post_build:
     commands:
       - echo pushing images now
-      - ./dev-ops/push-docker-image.sh express-add-sub  ${ECR_URL}
-      - ./dev-ops/push-docker-image.sh express-mult-div  ${ECR_URL}
-      - ./dev-ops/push-docker-image.sh express-rest-rith  ${ECR_URL}
+      - ./dev-ops/push-docker-image.sh express-add-sub  ${ECR_URL} calculator-add-sub
+      - ./dev-ops/push-docker-image.sh express-mult-div  ${ECR_URL} calculator-mult-div
+      - ./dev-ops/push-docker-image.sh express-rest-rith  ${ECR_URL} calculator-rest-rith
 artifacts:
   files:
     - express-add-sub.json
