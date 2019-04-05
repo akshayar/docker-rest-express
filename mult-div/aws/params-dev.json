@@ -25,11 +25,11 @@
 	},
 	{
 		"ParameterKey": "Path",
-		"ParameterValue": "/api/mult/*"
+		"ParameterValue": "/api/multdiv/mult/*"
 	},
 	{
 		"ParameterKey": "HealthCheckPath",
-		"ParameterValue": "/api/mult/1/1"
+		"ParameterValue": "/api/multdiv/mult/1/1"
 	},
 	{
 		"ParameterKey": "HealthCheckGracePeriodSeconds",

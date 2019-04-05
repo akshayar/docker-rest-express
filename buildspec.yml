@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install: 
+    commands:
+      - echo Starting build
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd add-sub && pwd && npm install && docker build -t arawa3/express-add-sub
+      - cd ..
+      - cd mult-div && pwd && npm install && docker build -t arawa3/express-mult-div
+      - cd ..
+      - cd rest-arith && pwd && npm install && docker build -t arawa3/express-rest-rith
+      - pwd
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+  discard-paths: yes

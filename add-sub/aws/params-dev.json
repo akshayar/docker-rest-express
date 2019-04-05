@@ -25,11 +25,11 @@
 	},
 	{
 		"ParameterKey": "Path",
-		"ParameterValue": "/api/add/*"
+		"ParameterValue": "/api/addsub/*"
 	},
 	{
 		"ParameterKey": "HealthCheckPath",
-		"ParameterValue": "/api/add/1/1"
+		"ParameterValue": "/api/addsub/add/1/1"
 	},
 	{
 		"ParameterKey": "HealthCheckGracePeriodSeconds",
