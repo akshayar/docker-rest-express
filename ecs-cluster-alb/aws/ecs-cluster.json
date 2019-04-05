@@ -6,6 +6,11 @@
             "Type": "String",
             "Default": "calculator",
             "Description": "The name of cluster."
+        },
+        "ExportNameSpace": {
+            "Type": "String",
+            "Default": "calculator-ecs",
+            "Description": "Namespace to export output."
         }
     },
     "Mappings": {
@@ -214,7 +219,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "ClusterName"
                         ]
@@ -233,7 +238,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "VPCId"
                         ]
@@ -252,7 +257,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "PublicSubnetOne"
                         ]
@@ -271,7 +276,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "PublicSubnetTwo"
                         ]
@@ -290,7 +295,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "FargateContainerSecurityGroup"
                         ]
@@ -309,7 +314,7 @@
                         ":",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "PublicLoadBalancerSG"
                         ]

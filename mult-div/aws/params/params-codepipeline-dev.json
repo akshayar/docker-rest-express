@@ -1,0 +1,15 @@
+{
+    "Parameters": {
+        "StackName": "calculator-ecs",
+        "ServiceName": "calculator-mult-div",
+        "ImageUrl": "arawa3/express-mult-div",
+        "ContainerPort": "8000",
+        "ContainerCpu": "256",
+        "ContainerMemory": "512",
+        "Path":"/api/multdiv/*",
+        "HealthCheckPath":"/api/multdiv/mult/1/1",
+        "HealthCheckGracePeriodSeconds": "60",
+        "Priority": "9",
+        "DesiredCount": "1"
+    }
+}

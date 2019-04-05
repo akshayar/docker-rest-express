@@ -1,0 +1,15 @@
+{
+    "Parameters": {
+        "StackName": "calculator-ecs",
+        "ServiceName": "calculator-add-sub",
+        "ImageUrl": "arawa3/express-add-sub",
+        "ContainerPort": "8000",
+        "ContainerCpu": "256",
+        "ContainerMemory": "512",
+        "Path":"/api/addsub/*",
+        "HealthCheckPath":"/api/addsub/add/1/1",
+        "HealthCheckGracePeriodSeconds": "60",
+        "Priority": "10",
+        "DesiredCount": "1"
+    }
+}

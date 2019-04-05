@@ -2,10 +2,10 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "A stack for deploying ELB and default listener rule.",
     "Parameters":{
-        "StackName": {
+        "ExportNameSpace": {
             "Type": "String",
             "Default": "calculator-ecs",
-            "Description": "The name stack."
+            "Description": "Namespace to export output."
         }
     },
     "Mappings": {
@@ -159,7 +159,7 @@
                         ":",
                         [
                             {
-                                "Ref": "StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "ExternalUrl"
                         ]
@@ -178,7 +178,7 @@
                         ":",
                         [
                             {
-                                "Ref": "StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "PublicListener"
                         ]

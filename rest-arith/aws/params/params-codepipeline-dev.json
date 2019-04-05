@@ -1,0 +1,15 @@
+{
+    "Parameters": {
+        "StackName": "calculator-ecs",
+        "ServiceName": "calculator-rest-rith",
+        "ImageUrl": "arawa3/express-rest-rith",
+        "ContainerPort": "8000",
+        "ContainerCpu": "256",
+        "ContainerMemory": "512",
+        "Path":"/api/calc/*",
+        "HealthCheckPath":"/api/calc/add/1/1",
+        "HealthCheckGracePeriodSeconds": "60",
+        "Priority": "1",
+        "DesiredCount": "1"
+    }
+}

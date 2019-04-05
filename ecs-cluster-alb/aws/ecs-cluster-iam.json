@@ -2,10 +2,10 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "A stack for creating iam roles",
     "Parameters":{
-        "StackName": {
+        "ExportNameSpace": {
             "Type": "String",
             "Default": "calculator-ecs",
-            "Description": "The name stack."
+            "Description": "Namespace to export output."
         }
     },
     "Resources": {
@@ -115,7 +115,7 @@
                         ":",
                         [
                             {
-                                "Ref": "StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "ECSRole"
                         ]
@@ -137,7 +137,7 @@
                         ":",
                         [
                             {
-                                "Ref": "StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "ECSTaskExecutionRole"
                         ]

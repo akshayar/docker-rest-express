@@ -1,0 +1,6 @@
+{
+    "Parameters": {
+        "ClusterName": "calculator",
+        "ExportNameSpace": "calculator-ecs"
+    }
+}

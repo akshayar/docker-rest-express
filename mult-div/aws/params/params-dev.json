@@ -25,7 +25,7 @@
 	},
 	{
 		"ParameterKey": "Path",
-		"ParameterValue": "/api/multdiv/mult/*"
+		"ParameterValue": "/api/multdiv/*"
 	},
 	{
 		"ParameterKey": "HealthCheckPath",
