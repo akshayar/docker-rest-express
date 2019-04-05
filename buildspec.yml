@@ -13,8 +13,8 @@ phases:
     commands:
       - echo Build started on `date`
       - cd add-sub && ../dev-ops/build-docker-image.sh  express-add-sub  ${ECR_URL} && cd ..
-      - cd add-sub && ../dev-ops/build-docker-image.sh  express-mult-div  ${ECR_URL} && cd ..
-      - cd add-sub && ../dev-ops/build-docker-image.sh  express-rest-rith  ${ECR_URL} && cd ..
+      - cd mult-div && ../dev-ops/build-docker-image.sh  express-mult-div  ${ECR_URL} && cd ..
+      - cd rest-arith && ../dev-ops/build-docker-image.sh  express-rest-rith  ${ECR_URL} && cd ..
       - pwd
   post_build:
     commands:
