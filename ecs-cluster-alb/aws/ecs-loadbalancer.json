@@ -90,7 +90,7 @@
                         "-",
                         [
                             {
-                                "Ref": "AWS::StackName"
+                                "Ref": "ExportNameSpace"
                             },
                             "drop-1"
                         ]
