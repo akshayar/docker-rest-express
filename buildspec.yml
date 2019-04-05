@@ -23,6 +23,3 @@ phases:
       - ./dev-ops/push-docker-image.sh express-mult-div  ${ECR_URL}
       - ./dev-ops/push-docker-image.sh express-rest-rith  ${ECR_URL}
 
-artifacts:
-  files:
-  discard-paths: yes
