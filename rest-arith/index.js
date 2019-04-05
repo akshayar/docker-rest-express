@@ -34,7 +34,7 @@ function callApi(targetHost, targetPort,targetPath,res) {
 
         apiResult.on("end", function () {
             var parsed = JSON.parse(responseBody);
-            parsed.from="API call";
+            parsed.from="API-Call";
             res.status(200).json(parsed);
         });
     });
@@ -94,5 +94,5 @@ app.use((req, res) => {
 
 var server=http.createServer(app);
 server.listen(port, () => {
-    console.log('Akshaya you are in on port %s',server.address().port);
+    console.log('Calculator -Akshaya you are in on port %s',server.address().port);
 });

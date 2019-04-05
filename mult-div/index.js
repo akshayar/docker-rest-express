@@ -17,7 +17,7 @@ multApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "result": x * y
+        "product": x * y
     });
 });
 
@@ -29,7 +29,7 @@ divApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "result": x / y
+        "ratio": x / y
     });
 });
 
@@ -42,5 +42,5 @@ app.use((req, res) => {
 
 var server=http.createServer(app);
 server.listen(port, () => {
-    console.log('Akshaya you are in on port %s',server.address().port);
+    console.log('Multilication division - Akshaya you are in on port %s',server.address().port);
 });
