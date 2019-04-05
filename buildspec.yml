@@ -7,11 +7,11 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd add-sub && pwd && npm install && docker build -t arawa3/express-add-sub
+      - cd add-sub && pwd  && docker build -t arawa3/express-add-sub
       - cd ..
-      - cd mult-div && pwd && npm install && docker build -t arawa3/express-mult-div
+      - cd mult-div && pwd  && docker build -t arawa3/express-mult-div
       - cd ..
-      - cd rest-arith && pwd && npm install && docker build -t arawa3/express-rest-rith
+      - cd rest-arith && pwd  && docker build -t arawa3/express-rest-rith
       - pwd
   post_build:
     commands:
