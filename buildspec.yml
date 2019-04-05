@@ -4,18 +4,24 @@ phases:
   install: 
     commands:
       - echo Starting build
+  pre_build:
+    commands:
+      - echo logging in to AWS ECR...
+      - $(aws ecr get-login --no-include-email --region ${REGION})
   build:
     commands:
       - echo Build started on `date`
-      - cd add-sub && pwd  && docker build -t arawa3/express-add-sub . && docker push arawa3/express-add-sub
-      - cd ..
-      - cd mult-div && pwd  && docker build -t arawa3/express-mult-div . && docker push arawa3/express-mult-div
-      - cd ..
-      - cd rest-arith && pwd  && docker build -t arawa3/express-rest-rith . && docker push arawa3/express-rest-rith
+      - cd add-sub && ./build-docker-image.sh  express-add-sub  ${ECR_URL} && cd ..
+      - cd add-sub && ./build-docker-image.sh  express-mult-div  ${ECR_URL} && cd ..
+      - cd add-sub && ./build-docker-image.sh  express-rest-rith  ${ECR_URL} && cd ..
       - pwd
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo pushing images now
+      - ./push-docker-image.sh express-add-sub  ${ECR_URL}
+      - ./push-docker-image.sh express-mult-div  ${ECR_URL}
+      - ./push-docker-image.sh express-rest-rith  ${ECR_URL}
+
 artifacts:
   files:
   discard-paths: yes
