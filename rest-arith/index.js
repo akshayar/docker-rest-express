@@ -34,7 +34,7 @@ function callApi(targetHost, targetPort,targetPath,res) {
 
         apiResult.on("end", function () {
             var parsed = JSON.parse(responseBody);
-            parsed.from="API-Call";
+            parsed.from="API-Call-2";
             res.status(200).json(parsed);
         });
     });

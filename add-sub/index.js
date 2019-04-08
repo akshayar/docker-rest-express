@@ -17,7 +17,7 @@ addApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "difference": x + y
+        "difference2": x + y
     });
 });
 
@@ -29,7 +29,7 @@ substractApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "sum": x - y
+        "sum2": x - y
     });
 });
 

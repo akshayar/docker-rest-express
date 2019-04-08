@@ -17,7 +17,7 @@ multApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "product": x * y
+        "product2": x * y
     });
 });
 
@@ -29,7 +29,7 @@ divApi.get('/:x/:y', (req, res) => {
     res.status(200).json({
         "x": x,
         "y": y,
-        "ratio": x / y
+        "ratio2": x / y
     });
 });
 
